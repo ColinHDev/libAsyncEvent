@@ -1,0 +1,63 @@
+<?php
+
+namespace ColinHDev\libAsyncEvent;
+
+use pocketmine\event\Event;
+use pocketmine\event\EventPriority;
+use pocketmine\event\HandlerListManager;
+use pocketmine\event\RegisteredListener;
+
+abstract class AsyncEvent extends Event {
+
+    /** @phpstan-var \Generator<int, RegisteredListener, null, void> */
+    private \Generator $generator;
+    private ?\Closure $callback = null;
+
+    /**
+     * @phpstan-param \Closure(static): void|null $callback
+     */
+    public function setCallback(?\Closure $callback) : void {
+        $this->callback = $callback;
+    }
+
+    public function call() : void {
+        $this->generator = $this->getEventHandlers();
+        $this->tryToResume();
+    }
+
+    public function __destruct() {
+        $this->tryToResume();
+    }
+
+    private function tryToResume() : void {
+        if (!$this->generator->valid()) {
+            return;
+        }
+        $this->generator->next();
+        if (!$this->generator->valid()) {
+            if ($this->callback !== null) {
+                ($this->callback)($this);
+            }
+            return;
+        }
+        /** @phpstan-var RegisteredListener $registration */
+        $registration = $this->generator->current();
+        $registration->callEvent($this);
+    }
+
+    /**
+     * @phpstan-return \Generator<int, RegisteredListener, null, void>
+     */
+    private function getEventHandlers() : \Generator {
+        $handlerList = HandlerListManager::global()->getListFor(get_class($this));
+        foreach (EventPriority::ALL as $priority) {
+            $currentList = $handlerList;
+            while ($currentList !== null) {
+                foreach ($currentList->getListenersByPriority($priority) as $registration) {
+                    yield $registration;
+                }
+                $currentList = $currentList->getParent();
+            }
+        }
+    }
+}
