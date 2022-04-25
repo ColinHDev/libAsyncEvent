@@ -25,9 +25,17 @@ abstract class AsyncEvent extends Event {
         $this->tryToResume();
     }
 
-    public function __destruct() {
+    public function continue() : void {
         $this->generator->next();
         $this->tryToResume();
+    }
+
+    public function __destruct() {
+        if ($this->generator->valid()) {
+            throw new \RuntimeException(
+                $this->getEventName() . " never finished handling all listeners. Got stuck at a listener of plugin " . $this->generator->current()->getPlugin()->getName() . ". (Possibly a forgotton call of the event's continue() method.) Please contact the plugin author, if this is not your plugin."
+            );
+        }
     }
 
     private function tryToResume() : void {
