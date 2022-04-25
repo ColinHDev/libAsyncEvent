@@ -35,7 +35,7 @@ abstract class AsyncEvent extends Event {
     public function __destruct() {
         if ($this->generator->valid()) {
             throw new \RuntimeException(
-                $this->getEventName() . " never finished handling all listeners. Got stuck at a listener of plugin " . $this->generator->current()->getPlugin()->getName() . ". (Possibly a forgotton call of the event's continue() method.) Please contact the plugin author, if this is not your plugin."
+                $this->getEventName() . " never finished handling all listeners. Got stuck at a listener of plugin " . $this->generator->current()->getPlugin()->getName() . ". (Possibly a forgotten call of the event's continue() method.) Please contact the plugin author, if this is not your plugin."
             );
         }
     }
