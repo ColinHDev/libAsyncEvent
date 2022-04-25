@@ -26,17 +26,15 @@ abstract class AsyncEvent extends Event {
     }
 
     public function __destruct() {
+        $this->generator->next();
         $this->tryToResume();
     }
 
     private function tryToResume() : void {
         if (!$this->generator->valid()) {
-            return;
-        }
-        $this->generator->next();
-        if (!$this->generator->valid()) {
             if ($this->callback !== null) {
                 ($this->callback)($this);
+                $this->callback = null;
             }
             return;
         }
