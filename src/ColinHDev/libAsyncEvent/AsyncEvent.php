@@ -44,6 +44,9 @@ abstract class AsyncEvent extends Event {
     }
 
     /**
+     * The following code used in this method was taken from
+     * https://github.com/pmmp/PocketMine-MP/blob/stable/src/event/Event.php#L58-L67 and only slightly modified to a
+     * generator function.
      * @phpstan-return \Generator<int, RegisteredListener, null, void>
      */
     private function getEventHandlers() : \Generator {
