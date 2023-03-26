@@ -48,7 +48,7 @@ $event->call();
 ## How to handle an event made with this library?
 To register an event listener for an async event, you can do it the same way, you would normally do it for every other event listener:
 ```php
-Server::getInstance()->getPluginManager();->registerEvents(new MyListener(), $this);
+Server::getInstance()->getPluginManager()->registerEvents(new MyListener(), $this);
 ```
 In this class, you as well create a method which accepts the event, you want to listen to, as a parameter:
 ```php
