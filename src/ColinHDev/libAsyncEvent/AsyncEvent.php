@@ -61,14 +61,8 @@ abstract class AsyncEvent extends Event {
      */
     private function getEventHandlers() : \Generator {
         $handlerList = HandlerListManager::global()->getListFor(get_class($this));
-        foreach (EventPriority::ALL as $priority) {
-            $currentList = $handlerList;
-            while ($currentList !== null) {
-                foreach ($currentList->getListenersByPriority($priority) as $registration) {
-                    yield $registration;
-                }
-                $currentList = $currentList->getParent();
-            }
+        foreach($handlerList->getListenerList() as $registration){
+            yield $registration;
         }
     }
 }
