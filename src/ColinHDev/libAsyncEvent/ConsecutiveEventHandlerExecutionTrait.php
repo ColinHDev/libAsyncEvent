@@ -33,6 +33,12 @@ trait ConsecutiveEventHandlerExecutionTrait {
     }
 
     private function tryToResume() : void {
+        if ($this->generator->valid()) {
+            /** @var RegisteredListener $registration */
+            $registration = $this->generator->current();
+            assert($this instanceof Event);
+            $registration->callEvent($this);
+        }
         $this->generator->next();
         if (!$this->generator->valid()) {
             $this->callCallback();
