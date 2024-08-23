@@ -50,13 +50,13 @@ trait ConsecutiveEventHandlerExecutionTrait {
 
     /**
      * The following code used in this method was taken from
-     * https://github.com/pmmp/PocketMine-MP/blob/stable/src/event/Event.php#L58-L68 and only slightly modified to a
-     * generator function.
+     * * https://github.com/pmmp/PocketMine-MP/blob/26086372107283aad399fb0613d1c284561398be/src/event/Event.php#L58-L68
+     * * and only slightly modified to a generator function.
      * @return Generator<int, RegisteredListener, null, void>
      */
     private function getEventHandlers() : Generator {
-        $handlerList = HandlerListManager::global()->getListFor(static::class);
-        foreach ($handlerList->getListenerList() as $registration) {
+        $handlers = HandlerListManager::global()->getHandlersFor(static::class);
+        foreach ($handlers as $registration) {
             yield $registration;
         }
     }
