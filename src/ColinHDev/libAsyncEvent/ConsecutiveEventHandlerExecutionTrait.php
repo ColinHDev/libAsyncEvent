@@ -29,11 +29,11 @@ trait ConsecutiveEventHandlerExecutionTrait {
 
     public function release() : void {
         $this->blocked = false;
+        $this->generator->next();
         $this->tryToResume();
     }
 
     private function tryToResume() : void {
-        $this->generator->next();
         if (!$this->generator->valid()) {
             $this->callCallback();
             return;
@@ -43,6 +43,7 @@ trait ConsecutiveEventHandlerExecutionTrait {
         assert($this instanceof Event);
         $registration->callEvent($this);
         if (!$this->blocked) {
+            $this->generator->next();
             $this->tryToResume();
         }
     }

@@ -35,6 +35,7 @@ trait PrioritizedEventHandlerExecutionTrait {
     public function release() : void {
         $this->blocks--;
         if ($this->blocks === 0) {
+            $this->generator->next();
             $this->tryToResume();
         }
     }
@@ -52,6 +53,7 @@ trait PrioritizedEventHandlerExecutionTrait {
             $registration->callEvent($this);
         }
         if ($this->blocks === 0) {
+            $this->generator->next();
             $this->tryToResume();
         }
     }
