@@ -1,6 +1,6 @@
 name: libAsyncEvent
 antigen: ColinHDev\libAsyncEvent
-version: 2.0.0
+version: 3.0.0
 
 description: Simple implementation for creating asynchronous event execution for PocketMine-MP plugins.
 
